@@ -1,0 +1,90 @@
+#!/usr/bin/python2
+
+# $Id: rst2s5.py 4564 2006-05-21 20:44:42Z wiemann $
+# Author: Chris Liechti <cliechti@gmx.net>
+# Copyright: This module has been placed in the public domain.
+
+"""
+A minimal front end to the Docutils Publisher, producing HTML slides using
+the S5 template system.
+"""
+
+try:
+    import locale
+    locale.setlocale(locale.LC_ALL, '')
+except:
+    pass
+
+from docutils.core import publish_cmdline, default_description
+
+
+description = ('Generates S5 (X)HTML slideshow documents from standalone '
+               'reStructuredText sources.  ' + default_description)
+
+
+import docutils.core
+from docutils.writers.html4css1 import Writer
+from docutils.parsers.rst import directives, Directive
+
+import os
+import pygments
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import HtmlFormatter
+from pygments.style import Style
+from pygments.token import Keyword, Name, Comment, String, Error, Number
+import subprocess
+from xml.etree import ElementTree
+from flask import g
+
+ROOT = os.path.join(os.path.dirname(__file__), '..', 'projects')
+
+
+class PygmentsStyle(Style):
+    """Pygments style based on Solarized."""
+    styles = {
+        Keyword: '#b58900',
+        Name: '#cb4b16',
+        Comment: '#839496',
+        String: '#2aa198',
+        Error: '#dc322f',
+        Number: '#859900'}
+
+
+class Pygments(Directive):
+    """Code syntax hightlighting."""
+    required_arguments = 1
+    optional_arguments = 1
+    final_argument_whitespace = True
+    has_content = False
+
+    def run(self):
+        filename = os.path.join(ROOT, g.project_name, self.arguments[0])
+        lexer_name = self.arguments[1] if len(self.arguments) > 1 else 'python'
+        code = open(filename).read()
+        lexer = get_lexer_by_name(lexer_name)
+        formatter = HtmlFormatter(
+            noclasses=True, nobackground=True, style=PygmentsStyle)
+        parsed = pygments.highlight(code, lexer, formatter)
+        return [docutils.nodes.raw('', parsed, format='html')]
+
+
+class InlinePygments(Directive):
+    """Inline code sytax highlighting."""
+    required_arguments = 1
+    optional_arguments = 0
+    final_argument_whitespace = True
+    has_content = True
+
+    def run(self):
+        lexer = get_lexer_by_name(self.arguments[0])
+        code = u'\n'.join(self.content)
+        formatter = HtmlFormatter(
+            noclasses=True, nobackground=True, style=PygmentsStyle)
+        parsed = pygments.highlight(code, lexer, formatter)
+        return [docutils.nodes.raw('', parsed, format='html')]
+
+
+directives.register_directive('pycode', Pygments)
+directives.register_directive('code-block', InlinePygments)
+
+publish_cmdline(writer_name='s5', description=description)

@@ -1,0 +1,301 @@
+/*
+  S5 style for Kozea
+  Public license, except for the Kozea logo (all rights reserved)
+*/
+
+/* Removing main default margins, paddings and sizes */
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: sans-serif;
+  font-size: 100%;
+  margin: 0;
+  font-weight: inherit;
+}
+
+
+
+a {
+  color: rgb(92, 129, 130);
+}
+
+ul {
+  margin: 0;
+  line-height: 1em;
+}
+
+pre, cite {
+  border-radius: 1em;
+  color: white;
+  background: black;
+  font-family: monospace;
+  font-size: 0.5em;
+  line-height: 0.8em;
+  margin: 0.5em 5em;
+  padding: 1em;
+  text-shadow: none;
+}
+
+
+
+/* Default contents */
+
+body {
+  background: rgba(92, 129, 130, 0.1) url(splash-logo.png) no-repeat left top;
+  color: #383a47;
+  font-family: sans;
+  font-size: 2em;
+}
+
+a:link,
+a:visited {
+  text-decoration: none;
+}
+
+blockquote {
+  padding: 0 2em 0.5em;
+  margin: 0 1.5em 0.5em;
+  text-align: center;
+  font-style: italic;
+}
+
+q {
+  font-style: italic;
+}
+
+kbd {
+  font-weight: bold; font-size: 1em;
+}
+
+sup {
+  font-size: smaller;
+}
+
+code {
+  padding: 2px 0.25em;
+  font-weight: bold;
+  color: #533;
+}
+
+dl {
+  padding: 0;
+  margin: 0 6%;
+}
+
+dt {
+  padding: 0.5em 0 0 0;
+}
+
+dd {
+  font-size: 0.85em;
+}
+
+img, object {
+  width: 100%;
+  height: 90%;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin: 0.5em 6%;
+}
+
+td,
+th {
+  border: 1px solid #bbb;
+  padding: 0.4em 0.8em;
+}
+
+th {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+
+
+/* Slide styles */
+
+.slide {
+  background: url(splash-logo-bottom.png) no-repeat bottom right;
+  bottom: 0;
+  text-shadow: #ccc 1px 1px 1px;
+}
+
+.slide h1 {
+  font-weight: bold;
+  font-size: 1.3em;
+  left: 6%;
+  margin: 0;
+  padding: 0.3em 0 0 50px;
+  position: absolute;
+  text-shadow: #999 0.03em 0.05em 3px;
+  top: 0.7em;
+}
+
+.slide p {
+  margin: 0.5em 6%;
+}
+
+.slide ul {
+  margin: 0.5em 6% 1em;
+  list-style: disc;
+}
+
+.slide li {
+  margin-top: 0.5em;
+  margin-right: 0;
+}
+
+.slide ul ul {
+  margin: 0 2% 1em;
+}
+
+.slide ul ul li {
+  font-size: 85%;
+  list-style: square;
+}
+
+
+/* Header and footer */
+
+div#header,
+div#footer {
+  background-color: rgba(92, 129, 130, 0.2);
+  background: url(rubbon-background.png);
+}
+
+div#header {
+  background-color: rgba(92, 129, 130, 0.2);
+  border-bottom: 1px rgba(92, 129, 130, 0.3) solid;
+  background: url(kozea-final.png) 95% 50% no-repeat, url(rubbon-background.png);
+}
+
+div#footer {
+  border-top: 1px rgba(92, 129, 130, 0.3) solid;
+  font-size: 0.75em;
+  font-weight: bold;
+  height: auto;
+}
+
+#footer h1 {
+  display: block;
+  color: rgb(92, 129, 130);
+  font-weight: normal;
+  font-size: 0.75em;
+  line-height: 1.8em;
+  padding: 0 1em;
+}
+
+div#controls {
+  bottom: 0;
+  font-size: 0.75em;
+  left: 50%;
+  line-height: 1.33em;
+  position: absolute;
+  text-align: right;
+  width: 50%;
+}
+
+#controls #navLinks {
+  padding: 0 0.75em 0 0;
+}
+
+#controls #navLinks a {
+  color: rgb(92, 129, 130);
+  display: inline-block;
+  outline: 0;
+  padding: 0 0.25em;
+}
+
+#controls #navLinks a#toggle {
+  display: none;
+}
+
+#controls #navLinks a:hover,
+#controls #navLinks a:focus {
+  background: rgba(92, 129, 130, 0.1);
+}
+
+#controls #navList {
+  position: absolute;
+  bottom: 0;
+  right: 5em;
+  font-size: 0.8em;
+  width: 100%;
+  z-index: 15;
+}
+
+#controls #navList #jumplist {
+  background: rgba(92, 129, 130, 0.1);
+  color: rgb(92, 129, 130);
+  border: 0;
+  outline: 0;
+  padding: 0 0.5em;
+  height: 2.2em;
+  font-size: 0.75em;
+}
+
+#currentSlide {
+  bottom: 0;
+  color: rgb(92, 129, 130);
+  font-size: 0.6em;
+  line-height: 1.75em;
+  text-align: center;
+}
+
+
+
+/* First slide */
+
+#slide0 {
+  padding-top: 3.5em;
+  font-size: 90%;
+}
+
+#slide0 h1 {
+  position: static;
+  font-size: 1.5em;
+  margin: 1.5em 0;
+  padding: 0;
+}
+
+
+
+/* Docutils */
+
+.docinfo-name {
+  display: none;
+}
+
+.docinfo {
+  bottom: 2em;
+  text-align: right;
+  right: 0;
+  position: absolute;
+  font-size: 0.8em;
+  opacity: 0.5;
+}
+
+.docinfo td {
+  padding: 0;
+}
+
+.screenshot {
+  height: 100%;
+  width: 60%;
+  margin: 0.5em 20%;
+}
+
+h2 {
+  font-size: 2em;
+  position: relative;
+  text-align: center;
+}
+
+.caption {
+  font-size: 0.6em;
+}

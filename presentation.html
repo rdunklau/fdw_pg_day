@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.9: http://docutils.sourceforge.net/" />
+<meta name="version" content="S5 1.1" />
+<title>Retour d'expérience sur les Foreign Data Wrappers</title>
+<meta name="author" content="Kozea - Ronan Dunklau" />
+<meta name="date" content="07-06-2012" />
+<style type="text/css">
+
+
+</style>
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="visible" />
+<!-- style sheet links -->
+<script src="./theme//slides.js" type="text/javascript"></script>
+<link rel="stylesheet" href="./theme//slides.css"
+      type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="./theme//outline.css"
+      type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="./theme//print.css"
+      type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="./theme//opera.css"
+      type="text/css" media="projection" id="operaFix" />
+</head>
+<body>
+<div class="layout">
+<div id="controls"></div>
+<div id="currentSlide"></div>
+<div id="header">
+
+</div>
+<div id="footer">
+<h1>Retour d'expérience sur les Foreign Data Wrappers</h1>
+
+</div>
+</div>
+<div class="presentation">
+<div class="slide" id="slide0">
+<h1 class="title">Retour d'expérience sur les Foreign Data Wrappers</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Auteur:</th>
+<td>Kozea - Ronan Dunklau</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>07-06-2012</td></tr>
+</tbody>
+</table>
+
+</div>
+<div class="slide" id="retour-d-experience-sur-les-fdw">
+<h1>Retour d'expérience sur les FDW</h1>
+<div class="section" id="programme">
+<h2>Programme</h2>
+<ul class="simple">
+<li>FDW - Qu'est-ce que c'est ?</li>
+<li>Retour d'expérience<ul>
+<li>Migration</li>
+<li>Extension de stockage</li>
+<li>ETL</li>
+<li>API SQL</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="a-propos-de-kozea">
+<h1>À propos de Kozea</h1>
+<ul class="simple">
+<li>Société de services informatique à destination des professionnels de santé.</li>
+<li>Développement Web.</li>
+<li>Utilisateurs de PostgreSQL.</li>
+</ul>
+<ul class="incremental simple">
+<li>SGBDR de choix pour tout les projets depuis 2010.</li>
+<li>Exploitation des fonctionnalités &quot;developer-friendly&quot;</li>
+</ul>
+</div>
+<div class="slide" id="foreign-data-wrapper-kezako">
+<h1>Foreign Data Wrapper - Kézako ?</h1>
+<ul class="incremental simple">
+<li>Apparus dans Postgresql 9.1</li>
+<li>Offre une API pour accéder à des données externes</li>
+<li>Implémentation du standard SQL/MED</li>
+</ul>
+</div>
+<div class="slide" id="foreign-data-wrapper-vue-d-ensemble">
+<h1>Foreign Data Wrapper - Vue d'ensemble</h1>
+<div class="figure align-center">
+<object data="img/overview.svg" type="image/svg+xml">
+img/overview.svg</object>
+<p class="caption">© 2012 Damien Clochard, used under a Creative Commons Attribution-ShareAlike license
+<a class="reference external" href="http://creativecommons.org/licenses/by-sa/3.0/">http://creativecommons.org/licenses/by-sa/3.0/</a></p>
+</div>
+</div>
+<div class="slide" id="mise-en-place">
+<h1>Mise en place</h1>
+<div class="section" id="creation-du-fdw">
+<h2>Création du FDW</h2>
+<ul class="simple">
+<li>Implémentation en C</li>
+<li>Packaging en extension</li>
+<li>Pour l'utilisateur</li>
+</ul>
+<div class="highlight"><pre style="line-height: 125%"><span style="color: #b58900">CREATE</span> <span style="color: #cb4b16">EXTENSION</span> <span style="color: #cb4b16">file_fdw</span>;
+</pre></div>
+</div>
+</div>
+<div class="slide" id="id1">
+<h1>Mise en place</h1>
+<div class="section" id="creation-du-serveur">
+<h2>Création du serveur</h2>
+<div class="highlight"><pre style="line-height: 125%"><span style="color: #b58900">CREATE</span> <span style="color: #cb4b16">SERVER</span> <span style="color: #cb4b16">fileserver</span> <span style="color: #b58900">FOREIGN</span> <span style="color: #b58900">DATA</span> <span style="color: #cb4b16">WRAPPER</span> <span style="color: #cb4b16">file_fdw</span>;
+</pre></div>
+</div>
+<div class="section" id="creation-de-la-table">
+<h2>Création de la table</h2>
+<div class="highlight"><pre style="line-height: 125%"><span style="color: #b58900">CREATE</span> <span style="color: #b58900">FOREIGN</span> <span style="color: #b58900">TABLE</span> <span style="color: #cb4b16">myfiletable</span> (
+  <span style="color: #cb4b16">id</span> <span style="color: #cb4b16">integer</span>,
+  <span style="color: #cb4b16">label</span>  <span style="color: #cb4b16">varchar</span>,
+  <span style="color: #cb4b16">amount</span> <span style="color: #cb4b16">numeric</span>,
+  <span style="color: #cb4b16">invoice_date</span> <span style="color: #cb4b16">date</span>
+) <span style="color: #cb4b16">SERVER</span> <span style="color: #cb4b16">fileserver</span> <span style="color: #b58900">OPTIONS</span> (
+  <span style="color: #cb4b16">filename</span> <span style="color: #2aa198">&#39;/path/to/my/file.csv&#39;</span>,
+  <span style="color: #cb4b16">format</span> <span style="color: #2aa198">&#39;csv&#39;</span>,
+  <span style="color: #b58900">delimiter</span> <span style="color: #2aa198">&#39;;&#39;</span>,
+  <span style="color: #cb4b16">header</span> <span style="color: #2aa198">&#39;false&#39;</span>,
+);
+</pre></div>
+</div>
+</div>
+<div class="slide" id="fdw-disponibles">
+<h1>FDW disponibles</h1>
+<ul class="simple">
+<li>SGBDR<ul>
+<li>postgresql</li>
+<li>oracle</li>
+<li>mysql</li>
+</ul>
+</li>
+<li>Fichiers<ul>
+<li>file_fdw</li>
+<li>file_text_array_fdw</li>
+</ul>
+</li>
+<li>&quot;Exotiques&quot;<ul>
+<li>twitter_fdw</li>
+<li>www_fdw</li>
+<li>multicorn</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="slide" id="cas-n1-migration">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="migration">
+<h2>Migration</h2>
+</div>
+</div>
+<div class="slide" id="id2">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="contexte">
+<h2>Contexte</h2>
+<ul class="simple">
+<li>Application composée de deux parties<ul>
+<li>&quot;Publique&quot; : inscription d'utilisateurs</li>
+<li>&quot;Privée&quot;: réalisation de &quot;tests&quot; auprès d'utilisateurs sélectionnés.</li>
+</ul>
+</li>
+<li>Migration php/mysql -&gt; python/postgresql</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="id3">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="avant">
+<h2>Avant ...</h2>
+<object data="img/schema-1.svg" type="image/svg+xml">
+img/schema-1.svg</object>
+</div>
+</div>
+<div class="slide" id="id4">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="objectif">
+<h2>Objectif</h2>
+<object data="img/schema-2.svg" type="image/svg+xml">
+img/schema-2.svg</object>
+</div>
+</div>
+<div class="slide" id="id5">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="transition">
+<h2>Transition</h2>
+<ul class="simple">
+<li>Mise en place d'un FDW vers l'ancienne base.</li>
+<li>Recherche des utilisateurs de l'ancienne base.</li>
+<li>Population des colonnes référençant ces utilisateurs.</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="id6">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="id7">
+<h2>Transition</h2>
+<object data="img/schema-3.svg" type="image/svg+xml">
+img/schema-3.svg</object>
+</div>
+</div>
+<div class="slide" id="id8">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="id9">
+<h2>Transition</h2>
+<object data="img/schema-4.svg" type="image/svg+xml">
+img/schema-4.svg</object>
+</div>
+</div>
+<div class="slide" id="id10">
+<h1>Cas n°1: migration</h1>
+<div class="section" id="bascule-complete">
+<h2>Bascule complète</h2>
+<ul>
+<li><p class="first">Migration de la partie publique</p>
+</li>
+<li><p class="first">Migration des données elles mêmes</p>
+<div class="highlight"><pre style="line-height: 125%">
+</pre></div>
+<p>BEGIN;
+CREATE TABLE user_temp AS (SELECT * FROM user);
+ALTER TABLE test ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
+DROP TABLE user;
+ALTER TABLE user_temp RENAME TO user;
+COMMIT;</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="bilan">
+<h1>Bilan</h1>
+<ul class="plus-icon simple">
+<li>Aucune modification apportée à l'ancien système</li>
+<li>Aucun développement spécifique pour la transition</li>
+<li>Modifications limitées à la BDD</li>
+</ul>
+</div>
+<div class="slide" id="cas-n2-exploiter-le-systeme-de-fichier">
+<h1>Cas n°2: Exploiter le système de fichier</h1>
+<div class="section" id="id11">
+<h2>Contexte</h2>
+<ul class="simple">
+<li>Application web permettant à l'utilisateur de choisir un thème graphique.</li>
+<li>Thèmes stockés sur un système de fichier partagés, prêt à êtres servis.</li>
+<li>Comment garantir une liste de thèmes cohérentes ?</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="id12">
+<h1>Cas n°2: Exploiter le système de fichier</h1>
+<div class="section" id="solution">
+<h2>Solution</h2>
+<object data="img/schema-5.svg" type="image/svg+xml">
+img/schema-5.svg</object>
+</div>
+</div>
+<div class="slide" id="id13">
+<h1>Cas n°2: Exploiter le système de fichier</h1>
+<div class="section" id="exemple">
+<h2>Exemple</h2>
+<blockquote>
+SELECT * from themes;</blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">categorie</th>
+<th class="head">name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>categorie1</td>
+<td>theme1</td>
+</tr>
+<tr><td>categorie1</td>
+<td>theme2</td>
+</tr>
+<tr><td>categorie1</td>
+<td>theme3</td>
+</tr>
+<tr><td>categorie2</td>
+<td>theme4</td>
+</tr>
+<tr><td>categorie2</td>
+<td>theme5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="slide" id="id14">
+<h1>Cas n°2: Exploiter le système de fichier</h1>
+<ul>
+<li><p class="first">Comment ajouter un thème ?</p>
+<p class="incremental">Simplement en déployant son répertoire au bon endroit.</p>
+</li>
+<li><p class="first">Lister les thèmes</p>
+<ul class="simple">
+<li>Puissance du sql pour ajouter les fonctionnalités autour</li>
+<li>Utilisation du même outil, partout: ORM</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="slide" id="id15">
+<h1>Cas n°2: Exploiter le système de fichier</h1>
+<div class="section" id="id16">
+<h2>Bilan</h2>
+<ul class="plus-icon simple">
+<li>Fichiers stockés là où ils doivent être: sur le système de fichiers</li>
+<li>Configuration réalisée en BDD</li>
+<li>Liste toujours à jour</li>
+<li>SQL a disposition (<em>select distinct categorie from themes;</em>)</li>
+</ul>
+<ul class="minus-icon simple">
+<li>Mise en place d'environnemnents de développement parfois compliquée.</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="cas-n3-etl">
+<h1>Cas n°3: ETL</h1>
+<div class="section" id="id17">
+<h2>Contexte</h2>
+<ul class="simple">
+<li>Import périodique de données au format CSV</li>
+<li>Mise à jour des données</li>
+</ul>
+<p>Certainement le cas le plus fréquent</p>
+</div>
+</div>
+<div class="slide" id="id18">
+<h1>Cas n°3: ETL</h1>
+<div class="section" id="procedure">
+<h2>Procédure</h2>
+<ul class="simple">
+<li>Téléchargement des fichiers</li>
+<li>Transformation dans la BDD (aggrégation, normalisation)</li>
+<li>Chargement dans les tables de l'application.</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="id19">
+<h1>Cas n°3: ETL</h1>
+<div class="section" id="telechargement-des-fichiers">
+<h2>Téléchargement des fichiers</h2>
+<p>Peut-être fait dans la BDD elle même!</p>
+<div class="highlight"><pre style="line-height: 125%"><span style="color: #b58900">CREATE</span> <span style="color: #b58900">function</span> <span style="color: #cb4b16">update_csv_files</span>() <span style="color: #b58900">RETURNS</span> <span style="color: #cb4b16">VOID</span> <span style="color: #b58900">AS</span> <span style="color: #dc322f">$$</span>
+...
+<span style="color: #dc322f">$$</span> <span style="color: #b58900">language</span> <span style="color: #cb4b16">plpythonu</span>;
+</pre></div>
+<p class="incremental">Attention à bien gérer les exceptions.</p>
+</div>
+</div>
+<div class="slide" id="id20">
+<h1>Cas n°3: ETL</h1>
+<div class="section" id="transformations-des-donnees">
+<h2>Transformations des données</h2>
+<div class="highlight"><pre style="line-height: 125%"><span style="color: #b58900">INSERT</span> <span style="color: #b58900">INTO</span> <span style="color: #cb4b16">aggregate_by_month</span> (<span style="color: #cb4b16">product_id</span>, <span style="color: #cb4b16">amount</span>, <span style="color: #cb4b16">quantity</span>, <span style="color: #b58900">month</span>) (
+  <span style="color: #b58900">select</span> <span style="color: #cb4b16">product_id</span>, <span style="color: #b58900">sum</span>(<span style="color: #cb4b16">amount</span>), <span style="color: #b58900">sum</span>(<span style="color: #cb4b16">quantity</span>), <span style="color: #cb4b16">date_trunc</span>(<span style="color: #2aa198">&#39;month&#39;</span>, <span style="color: #cb4b16">date</span>)
+  <span style="color: #b58900">FROM</span> <span style="color: #cb4b16">csv_amounts</span>
+  <span style="color: #b58900">group</span> <span style="color: #b58900">by</span> <span style="color: #cb4b16">date_trunc</span>(<span style="color: #2aa198">&#39;month&#39;</span>, <span style="color: #cb4b16">date</span>)
+);
+</pre></div>
+</div>
+</div>
+<div class="slide" id="id21">
+<h1>Cas n°3: ETL</h1>
+<div class="section" id="id22">
+<h2>Bilan</h2>
+<ul class="plus-icon simple">
+<li>Tout est fait dans la BDD</li>
+<li>simplicité de déploiement</li>
+<li>performant</li>
+</ul>
+<ul class="minus-icon simple">
+<li>Gestion des dépendances</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="cas-n4-postgresql-comme-api-sql">
+<h1>Cas n°4: Postgresql comme API SQL.</h1>
+<div class="section" id="id23">
+<h2>Contexte</h2>
+<ul class="incremental simple">
+<li>Analyse en ligne de données croisées de différentes sources<ul>
+<li>Système de gestion de versions Git</li>
+<li>Annuaire LDAP</li>
+<li>Serveur IMAP ...</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="slide" id="id24">
+<h1>Cas n°4: Postgresql comme API SQL.</h1>
+<div class="section" id="architecture">
+<h2>Architecture</h2>
+<object data="img/schema-6.svg" type="image/svg+xml">
+img/schema-6.svg</object>
+</div>
+</div>
+<div class="slide" id="id25">
+<h1>Cas n°4: Postgresql comme API SQL.</h1>
+<div class="section" id="example-le-developpement-de-postgresql">
+<h2>Example: le développement de PostgreSQL</h2>
+<p>Quel est le commiter s'exprimant le moins sur pg-hackers ?</p>
+<div class="incremental"><div class="highlight"><pre style="line-height: 125%"><span style="color: #b58900">Select</span> (<span style="color: #cb4b16">nb_msg</span> / <span style="color: #cb4b16">nb_commit</span>) <span style="color: #b58900">as</span> <span style="color: #cb4b16">ratio</span>, <span style="color: #cb4b16">author_email</span>
+<span style="color: #b58900">FROM</span>
+  (<span style="color: #b58900">select</span> <span style="color: #b58900">count</span>(<span style="color: #b58900">distinct</span> <span style="color: #2aa198">&quot;Message-ID&quot;</span>) <span style="color: #b58900">as</span> <span style="color: #cb4b16">nb_msg</span>, <span style="color: #b58900">count</span>(<span style="color: #b58900">distinct</span>
+  <span style="color: #cb4b16">hash</span>) <span style="color: #b58900">as</span> <span style="color: #cb4b16">nb_commit</span>, <span style="color: #cb4b16">author_email</span>
+  <span style="color: #b58900">from</span> <span style="color: #cb4b16">mails</span>
+  <span style="color: #b58900">inner</span> <span style="color: #b58900">join</span> <span style="color: #cb4b16">git</span> <span style="color: #b58900">on</span> <span style="color: #cb4b16">mails</span>.<span style="color: #2aa198">&quot;From&quot;</span> <span style="color: #b58900">like</span> <span style="color: #2aa198">&#39;%&#39;</span> || <span style="color: #cb4b16">git</span>.<span style="color: #cb4b16">author_email</span> || <span style="color: #2aa198">&#39;%&#39;</span>
+  <span style="color: #b58900">where</span> <span style="color: #2aa198">&quot;To&quot;</span> <span style="color: #b58900">like</span> <span style="color: #2aa198">&#39;%pgsql-hackers@postgresql.org%&#39;</span>
+  <span style="color: #b58900">group</span> <span style="color: #b58900">by</span> <span style="color: #2aa198">&quot;author_email&quot;</span>) <span style="color: #b58900">as</span> <span style="color: #cb4b16">t</span>
+<span style="color: #b58900">WHERE</span> <span style="color: #cb4b16">nb_commit</span> &gt; <span style="color: #859900">0</span>
+<span style="color: #b58900">ORDER</span> <span style="color: #b58900">BY</span> <span style="color: #cb4b16">nb_msg</span> / <span style="color: #cb4b16">nb_commit</span>;
+</pre></div>
+</div></div>
+</div>
+<div class="slide" id="id26">
+<h1>Cas n°4: Postgresql comme API SQL.</h1>
+</div>
+<div class="slide" id="chez-kozea">
+<h1>Chez Kozea...</h1>
+<ul class="simple">
+<li>Application d'édition et d'archivage de documents.</li>
+<li>Utilisateurs -&gt; LDAP</li>
+<li>Documents -&gt; GIT</li>
+</ul>
+</div>
+<div class="slide" id="questions">
+<h1>Questions</h1>
+<p>Questions ?</p>
+</div>
+</div>
+</body>
+</html>
