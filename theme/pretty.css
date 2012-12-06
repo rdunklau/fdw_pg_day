@@ -8,6 +8,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 h1, h2, h3, h4 {
@@ -298,4 +299,17 @@ h2 {
 
 .caption {
   font-size: 0.6em;
+}
+
+.figure {
+  height: 100%;
+}
+
+object {
+  width: 90%;
+  height: 90%;
+} 
+
+.section {
+  max-height: 90%;
 }

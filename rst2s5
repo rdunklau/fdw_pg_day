@@ -34,7 +34,6 @@ from pygments.style import Style
 from pygments.token import Keyword, Name, Comment, String, Error, Number
 import subprocess
 from xml.etree import ElementTree
-from flask import g
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'projects')
 
