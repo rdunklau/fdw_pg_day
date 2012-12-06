@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.9: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.9.1: http://docutils.sourceforge.net/" />
 <meta name="version" content="S5 1.1" />
 <title>Retour d'expérience sur les Foreign Data Wrappers</title>
 <meta name="author" content="Kozea - Ronan Dunklau" />
@@ -180,7 +180,7 @@ img/overview.svg</object>
 <h1>Cas n°1: migration</h1>
 <div class="section" id="avant">
 <h2>Avant ...</h2>
-<object data="img/schema-1.svg" type="image/svg+xml">
+<object data="img/schema-1.svg" style="height: 400px;" type="image/svg+xml">
 img/schema-1.svg</object>
 </div>
 </div>
@@ -188,7 +188,7 @@ img/schema-1.svg</object>
 <h1>Cas n°1: migration</h1>
 <div class="section" id="objectif">
 <h2>Objectif</h2>
-<object data="img/schema-2.svg" type="image/svg+xml">
+<object data="img/schema-2.svg" style="height: 400px;" type="image/svg+xml">
 img/schema-2.svg</object>
 </div>
 </div>
@@ -207,7 +207,7 @@ img/schema-2.svg</object>
 <h1>Cas n°1: migration</h1>
 <div class="section" id="id7">
 <h2>Transition</h2>
-<object data="img/schema-3.svg" type="image/svg+xml">
+<object data="img/schema-3.svg" style="height: 400px;" type="image/svg+xml">
 img/schema-3.svg</object>
 </div>
 </div>
@@ -215,7 +215,7 @@ img/schema-3.svg</object>
 <h1>Cas n°1: migration</h1>
 <div class="section" id="id9">
 <h2>Transition</h2>
-<object data="img/schema-4.svg" type="image/svg+xml">
+<object data="img/schema-4.svg" style="height: 400px;" type="image/svg+xml">
 img/schema-4.svg</object>
 </div>
 </div>
@@ -227,14 +227,13 @@ img/schema-4.svg</object>
 <li><p class="first">Migration de la partie publique</p>
 </li>
 <li><p class="first">Migration des données elles mêmes</p>
-<div class="highlight"><pre style="line-height: 125%">
+<div class="highlight"><pre style="line-height: 125%"><span style="color: #b58900">BEGIN</span>;
+<span style="color: #b58900">CREATE</span> <span style="color: #b58900">TABLE</span> <span style="color: #cb4b16">user_temp</span> <span style="color: #b58900">AS</span> (<span style="color: #b58900">SELECT</span> * <span style="color: #b58900">FROM</span> <span style="color: #b58900">user</span>);
+<span style="color: #b58900">ALTER</span> <span style="color: #b58900">TABLE</span> <span style="color: #cb4b16">test</span> <span style="color: #b58900">ADD</span> <span style="color: #b58900">FOREIGN</span> <span style="color: #b58900">KEY</span> (<span style="color: #cb4b16">user_id</span>) <span style="color: #b58900">REFERENCES</span> <span style="color: #b58900">user</span>(<span style="color: #cb4b16">user_id</span>);
+<span style="color: #b58900">DROP</span> <span style="color: #b58900">TABLE</span> <span style="color: #b58900">user</span>;
+<span style="color: #b58900">ALTER</span> <span style="color: #b58900">TABLE</span> <span style="color: #cb4b16">user_temp</span> <span style="color: #b58900">RENAME</span> <span style="color: #b58900">TO</span> <span style="color: #b58900">user</span>;
+<span style="color: #b58900">COMMIT</span>;
 </pre></div>
-<p>BEGIN;
-CREATE TABLE user_temp AS (SELECT * FROM user);
-ALTER TABLE test ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
-DROP TABLE user;
-ALTER TABLE user_temp RENAME TO user;
-COMMIT;</p>
 </li>
 </ul>
 </div>
@@ -262,7 +261,7 @@ COMMIT;</p>
 <h1>Cas n°2: Exploiter le système de fichier</h1>
 <div class="section" id="solution">
 <h2>Solution</h2>
-<object data="img/schema-5.svg" type="image/svg+xml">
+<object data="img/schema-5.svg" style="height: 400px;" type="image/svg+xml">
 img/schema-5.svg</object>
 </div>
 </div>
@@ -409,7 +408,7 @@ SELECT * from themes;</blockquote>
 <h1>Cas n°4: Postgresql comme API SQL.</h1>
 <div class="section" id="architecture">
 <h2>Architecture</h2>
-<object data="img/schema-6.svg" type="image/svg+xml">
+<object data="img/schema-6.svg" style="height: 400px;" type="image/svg+xml">
 img/schema-6.svg</object>
 </div>
 </div>

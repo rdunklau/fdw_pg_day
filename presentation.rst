@@ -155,7 +155,7 @@ Avant ...
 ---------
 
 .. image:: img/schema-1.svg
-
+  :height: 400px
 
 Cas n°1: migration
 ==================
@@ -164,6 +164,7 @@ Objectif
 --------
 
 .. image:: img/schema-2.svg
+  :height: 400px
 
 Cas n°1: migration
 ==================
@@ -182,6 +183,8 @@ Transition
 ----------
 
 .. image:: img/schema-3.svg
+  :height: 400px
+
 
 Cas n°1: migration
 ==================
@@ -190,6 +193,7 @@ Transition
 ----------
 
 .. image:: img/schema-4.svg
+  :height: 400px
 
 
 Cas n°1: migration
@@ -203,12 +207,12 @@ Bascule complète
   
   .. code-block:: sql
 
-  BEGIN;  
-  CREATE TABLE user_temp AS (SELECT * FROM user);
-  ALTER TABLE test ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
-  DROP TABLE user;
-  ALTER TABLE user_temp RENAME TO user;
-  COMMIT;
+    BEGIN;  
+    CREATE TABLE user_temp AS (SELECT * FROM user);
+    ALTER TABLE test ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
+    DROP TABLE user;
+    ALTER TABLE user_temp RENAME TO user;
+    COMMIT;
 
 
 Bilan
@@ -238,6 +242,7 @@ Solution
 --------
 
 .. image:: img/schema-5.svg
+  :height: 400px
 
 
 Cas n°2: Exploiter le système de fichier
@@ -387,6 +392,7 @@ Architecture
 ------------
 
 .. image:: img/schema-6.svg
+  :height: 400px
 
 Cas n°4: Postgresql comme API SQL.
 ==================================
